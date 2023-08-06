@@ -14,6 +14,9 @@ echo -e "\e[36m>>>>>>>>>>> Create Application User >>>>>>>>\e[0m"
 useradd roboshop
 
 echo -e "\e[36m>>>>>>>>>>> Create Application directory >>>>>>>>\e[0m"
+rm -rf /app
+
+echo -e "\e[36m>>>>>>>>>>> Create Application directory >>>>>>>>\e[0m"
 mkdir /app
 
 echo -e "\e[36m>>>>>>>>>>> Download Application content >>>>>>>>\e[0m"
