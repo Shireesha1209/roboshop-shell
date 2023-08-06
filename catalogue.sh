@@ -1,4 +1,4 @@
-log=tmp/roboshop.log
+log=/tmp/roboshop.log
 
 echo -e "\e[36m>>>>>>>>>>> Create catalogue service >>>>>>>>\e[0m"
 cp catalogue.service /etc/systemd/system/catalogue.service &>>${log}
