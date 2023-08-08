@@ -1,7 +1,7 @@
 log=/tmp/roboshop.log
 
 func_exit_status(){
-  if[ $? eq 0 ]; then
+  if [ $? eq 0 ]; then
     echo -e "\e[32m SUCCESS \e[0m"
   else
     echo -e "\e[31m FAILURE \e[0m"
@@ -48,17 +48,21 @@ func_schema_setup(){
    if [ "${schema_type}" == "mongodb" ]; then
     echo -e "\e[36m>>>>>>>>>>> Install Mongo Client >>>>>>>>\e[0m"
     yum install mongodb-org-shell -y &>>${log}
+    func_exit_status
 
     echo -e "\e[36m>>>>>>>>>>> Load Catalogue schema >>>>>>>>\e[0m"
     mongo --host mongodb.rdevops.online </app/schema/${component}.js &>>${log}
+    func_exit_status
    fi
 
    if [ "${schema_type}" == "mysql" ]; then
      echo -e "\e[36m>>>>>>>>>>> Install Mysql client >>>>>>>>\e[0m"
      yum install mysql -y &>>${log}
+     func_exit_status
 
      echo -e "\e[36m>>>>>>>>>>> Load Schema >>>>>>>>\e[0m"
      mysql -h mysql.rdevops.online -uroot -pRoboShop@1 < /app/schema/${component}.sql &>>${log}
+     func_exit_status
    fi
 
 }
