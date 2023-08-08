@@ -1,25 +1,38 @@
 log=/tmp/roboshop.log
 
+func_exit_status(){
+  if[ $? eq 0 ]; then
+    echo -e "\e[32m SUCCESS \e[0m"
+  else
+    echo -e "\e[31m FAILURE \e[0m"
+  fi
+}
 func_apppreq(){
      echo -e "\e[36m>>>>>>>>>>> create ${component} service >>>>>>>>\e[0m"
      cp ${component}.service /etc/systemd/system/${component}.service &>>${log}
+     func_exit_status
 
      echo -e "\e[36m>>>>>>>>>>> Create Application User >>>>>>>>\e[0m"
      useradd roboshop &>>${log}
+     func_exit_status
 
      echo -e "\e[36m>>>>>>>>>>> Cleanup existing Application directory >>>>>>>>\e[0m"
      rm -rf /app &>>${log}
+     func_exit_status
 
      echo -e "\e[36m>>>>>>>>>>> Create Application directory >>>>>>>>\e[0m"
      mkdir /app &>>${log}
+     func_exit_status
 
      echo -e "\e[36m>>>>>>>>>>> Download Application content >>>>>>>>\e[0m"
      curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${log}
+     func_exit_status
 
      echo -e "\e[36m>>>>>>>>>>> Extract Application content >>>>>>>>\e[0m"
      cd /app
      unzip /tmp/${component}.zip &>>${log}
      cd /app
+     func_exit_status
 
 }
 
@@ -28,6 +41,7 @@ func_systemd(){
     systemctl daemon-reload &>>${log}
     systemctl enable ${component} &>>${log}
     systemctl restart ${component} &>>${log}
+    func_exit_status
 }
 
 func_schema_setup(){
@@ -53,17 +67,21 @@ func_nodejs(){
 
   echo -e "\e[36m>>>>>>>>>>> Create MongoDb repo >>>>>>>>\e[0m"
   cp mongo.repo /etc/yum.repos.d/mongo.repo &>>${log}
+  func_exit_status
 
-  echo -e "\e[36m>>>>>>>>>>> Create MongoDb repo >>>>>>>>\e[0m"
+  echo -e "\e[36m>>>>>>>>>>> Install NodeJs Repos >>>>>>>>\e[0m"
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${log}
+  func_exit_status
 
   echo -e "\e[36m>>>>>>>>>>> Install NodeJs >>>>>>>>\e[0m"
   yum install nodejs -y &>>${log}
+  func_exit_status
 
   func_apppreq
 
   echo -e "\e[36m>>>>>>>>>>> Download NodeJs Dependencies >>>>>>>>\e[0m"
   npm install &>>${log}
+  func_exit_status
 
   func_schema_setup
 
